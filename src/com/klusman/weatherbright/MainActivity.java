@@ -21,6 +21,7 @@ public class MainActivity extends Activity {
 	LinearLayout ll;
 	LinearLayout.LayoutParams lp;
 	String [] myArray = {"1-day Forecast","2-day forecast","3-day forecast","4-day forecast","5-day forecast"};
+	Boolean connected = false;
 	
 	
     @Override
@@ -33,11 +34,18 @@ public class MainActivity extends Activity {
         ll.setLayoutParams(lp);
         ll.setBackgroundColor(0xFF00FF00);
         
+        // Detect network connection
+        connected = com.klusman.webStuff.WebConnections.getConnectionStatus(this);
+        	if (connected){
+        		Log.i("NETWORK STATUS", com.klusman.webStuff.WebConnections.getConnectionType(this));
+        	}
         
+        
+        
+        // SPINNER
         LinearLayout spinnerLayout = com.klusman.formthings.Spinners.daysSpinner(this, myArray);
         spinnerLayout.findViewById(1).setBackgroundColor(0xFFFFFFFF);
         Spinner spin = (Spinner) spinnerLayout.findViewById(1);
-        
         spin.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
