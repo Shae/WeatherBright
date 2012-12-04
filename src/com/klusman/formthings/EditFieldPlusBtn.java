@@ -18,7 +18,7 @@ public class EditFieldPlusBtn {
 		ll.setLayoutParams(lp);
 		
 		EditText et = new EditText(context);
-		lp = new LayoutParams(0, LayoutParams.WRAP_CONTENT, 1.0f);
+		lp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		et.setHint(hint);
 		et.setLayoutParams(lp);
 		et.setTextSize(25);
@@ -55,7 +55,7 @@ public class EditFieldPlusBtn {
 		ll.setLayoutParams(lp);
 		
 		TextView tv = new TextView(context);
-		lp = new LayoutParams(0, LayoutParams.WRAP_CONTENT, 1.0f);
+		lp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1.0f);
 		tv.setText(stringIn);
 		
 		ll.addView(tv);

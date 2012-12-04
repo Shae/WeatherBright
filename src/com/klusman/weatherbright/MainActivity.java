@@ -5,6 +5,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 
+
+import com.klusman.formthings.WeatherDisplayLayout;
 import com.klusman.webStuff.WebConnections;
 
 import android.os.AsyncTask;
@@ -33,6 +35,7 @@ public class MainActivity extends Activity {
 	int arrayPosition = 0;
 	String finalAreaCode = "98524";
 	TextView tv;
+	WeatherDisplayLayout _weatherLayout;
 
 
 	@Override
@@ -90,6 +93,7 @@ public class MainActivity extends Activity {
 		btn.setBackgroundColor(0xFFFFFFFF);
 		EditText et = (EditText) lineAndBtn.findViewById(1);
 		et.setBackgroundColor(0xFFFFFF00);
+		lineAndBtn.setGravity(Gravity.CENTER_HORIZONTAL);
 		
 		//  onCLICK LISTENER
 		btn.setOnClickListener(new View.OnClickListener() {
@@ -112,9 +116,28 @@ public class MainActivity extends Activity {
 			}
 		});
 
-		ll.addView(spinnerLayout);
-		ll.addView(lineAndBtn);
-		ll.addView(tv);
+		
+		
+		
+		LinearLayout b1 = com.klusman.formthings.BlankLineBorder.blankLine(this);
+		LinearLayout b2 = com.klusman.formthings.BlankLineBorder.blankLine(this);
+		LinearLayout b3 = com.klusman.formthings.BlankLineBorder.blankLine(this);
+		
+		
+		ll.addView(spinnerLayout); // day spinner
+		ll.addView(b1); //blank line
+		ll.addView(lineAndBtn); // zip code and Btn
+		ll.addView(b3);//blank line
+		ll.addView(tv); // forecast day title
+		ll.addView(b2);//blank line
+		
+
+		_weatherLayout = new WeatherDisplayLayout(this);
+		
+
+		ll.addView(_weatherLayout);
+		
+		
 		setContentView(ll);
 
 	}
