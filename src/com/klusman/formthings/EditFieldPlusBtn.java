@@ -3,6 +3,7 @@ package com.klusman.formthings;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.text.InputFilter;
+import android.view.Gravity;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -34,6 +35,7 @@ public class EditFieldPlusBtn {
 		et.setFilters(FilterArray);
 		// Set edit Text ID
 		et.setId(1);
+		et.setGravity(Gravity.CENTER_HORIZONTAL);
 		
 		Button btn = new Button(context);
 		btn.setText(buttonText);

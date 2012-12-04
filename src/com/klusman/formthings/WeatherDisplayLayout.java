@@ -1,11 +1,16 @@
 package com.klusman.formthings;
 
+import com.klusman.weatherbright.R;
+
 import android.content.Context;
 import android.widget.GridLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class WeatherDisplayLayout extends GridLayout{
-	
+	ImageView _image;
+	TextView _weatherCond;
 	TextView _date;
 	TextView _high;
 	TextView _low;
@@ -18,6 +23,12 @@ public class WeatherDisplayLayout extends GridLayout{
 		_context = context;
 		
 		this.setColumnCount(2);
+		
+		
+		 
+		ImageView theImage = new ImageView(_context);
+		theImage.setImageResource(R.drawable.ic_launcher);
+		_weatherCond = new TextView(_context);
 		
 		TextView theDate = new TextView(_context);
 		theDate.setText("Date: ");
@@ -35,6 +46,9 @@ public class WeatherDisplayLayout extends GridLayout{
 		theWindspeed.setText("Windspeed: ");
 		_windspeed = new TextView(_context);
 		
+		this.addView(theImage);
+		this.addView(_weatherCond);
+		 
 		this.addView(theDate);
 		this.addView(_date);
 
@@ -47,6 +61,8 @@ public class WeatherDisplayLayout extends GridLayout{
 		this.addView(theWindspeed);
 		this.addView(_windspeed);
 		
+		LinearLayout ll = com.klusman.formthings.BlankLineBorder.blankLine(_context);
+		this.addView(ll);
 		
 	}
 }
