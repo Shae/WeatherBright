@@ -133,7 +133,7 @@ public class MainActivity extends Activity {
 		Log.i("DAYS TO GET", "Pull this many days: " + dayString );
 		
 		//String baseURL = "http://free.worldweatheronline.com/feed/weather.ashx?q=" + areaCode + "98524&format=JSON&num_of_days=" + daySpan + "&key=2a0cc91795015022122811";
-		String baseURL = "http://free.worldweatheronline.com/feed/weather.ashx";
+		//String baseURL = "http://free.worldweatheronline.com/feed/weather.ashx";
 		//String messURL = "http://free.worldweatheronline.com/feed/weather.ashx" + "?q=" + finalAreaCode + "&format=json&num_of_days=" + daySpan + "&key=2a0cc91795015022122811";
 		String messURL = "http://free.worldweatheronline.com/feed/weather.ashx?q=" + areaCode + "&format=json&num_of_days=" + daySpan + "&key=2a0cc91795015022122811";
 		String qs;
