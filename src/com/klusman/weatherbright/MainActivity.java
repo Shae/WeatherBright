@@ -5,13 +5,19 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 
 import com.klusman.formthings.WeatherDisplayLayout;
+import com.klusman.formthings.WeatherDisplayLayoutLL;
 import com.klusman.webStuff.WebConnections;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Context;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -21,13 +27,16 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridLayout;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
-
+	ScrollView sv;
 	LinearLayout ll;
 	LinearLayout.LayoutParams lp;
 	String [] myArray = {"1-day Forecast","2-day forecast","3-day forecast","4-day forecast","5-day forecast"};
@@ -35,17 +44,26 @@ public class MainActivity extends Activity {
 	int arrayPosition = 0;
 	String finalAreaCode = "98524";
 	TextView tv;
-	WeatherDisplayLayout _weatherLayout;
+	WeatherDisplayLayoutLL _weatherLayout1;
+	WeatherDisplayLayout _weatherLayout2;
+	WeatherDisplayLayout _weatherLayout3;
+	WeatherDisplayLayout _weatherLayout4;
+	WeatherDisplayLayout _weatherLayout5;
+	LinearLayout W;
+	JSONArray resultsArrayW;
+	Context _context = this;
 
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		sv = new ScrollView(this);
 		ll = new LinearLayout(this);
 		ll.setOrientation(LinearLayout.VERTICAL);
 		lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
 		ll.setLayoutParams(lp);
+
 		ll.setBackgroundColor(0xFF00FF00);
 
 		tv = new TextView(this);
@@ -73,16 +91,12 @@ public class MainActivity extends Activity {
 				// Get the item Selected and Print out in log
 				String arrayItem = myArray[arg2];
 				Log.i("ITEM SELECTED", arrayItem);
-				//tv.setText(arrayItem + " Weather Forecast");
 				tv.setText((arg2 + 1) + "-Day Weather Forecast");
 				arrayPosition = arg2;
-				
-
 			}
 
 			@Override
 			public void onNothingSelected(AdapterView<?> arg0) {
-				// TODO Auto-generated method stub
 				Log.i("ITEM SELECTED", "NO ITEM SELECTED");
 
 			}
@@ -113,11 +127,11 @@ public class MainActivity extends Activity {
 				InputMethodManager imm = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
 				imm.hideSoftInputFromWindow(v.getWindowToken(), 0);   
 				getDays((arrayPosition + 1));
+				//W.refreshDrawableState();
+				
 			}
 		});
 
-		
-		
 		
 		LinearLayout b1 = com.klusman.formthings.BlankLineBorder.blankLine(this);
 		LinearLayout b2 = com.klusman.formthings.BlankLineBorder.blankLine(this);
@@ -131,14 +145,23 @@ public class MainActivity extends Activity {
 		ll.addView(tv); // forecast day title
 		ll.addView(b2);//blank line
 		
-
-		_weatherLayout = new WeatherDisplayLayout(this);
+	 	_weatherLayout1 = new com.klusman.formthings.WeatherDisplayLayoutLL(this);
+/*		_weatherLayout2 = new WeatherDisplayLayout(this);
+		_weatherLayout3 = new WeatherDisplayLayout(this);
+		_weatherLayout4 = new WeatherDisplayLayout(this);
+		_weatherLayout5 = new WeatherDisplayLayout(this);
 		
 
-		ll.addView(_weatherLayout);
+			
+			ll.addView(_weatherLayout2);
+			ll.addView(_weatherLayout3);
+			ll.addView(_weatherLayout4);
+			ll.addView(_weatherLayout5);
+*/
 		
-		
-		setContentView(ll);
+	    ll.addView(_weatherLayout1);
+		sv.addView(ll);
+		setContentView(sv);
 
 	}
 
@@ -184,6 +207,7 @@ public class MainActivity extends Activity {
 
 	private class QuoteRequest extends AsyncTask<URL, Void, String>{
 
+		
 		@Override
 		protected String doInBackground(URL... urls) {
 			String response = "";
@@ -196,6 +220,44 @@ public class MainActivity extends Activity {
 		@Override
 		protected void onPostExecute(String result){
 			Log.i("URL RESPONSE:", result);
+			
+			try{
+				JSONObject json = new JSONObject(result);
+				JSONObject results = json.getJSONObject("data");
+				JSONArray resultsArray = results.getJSONArray("current_condition");  // If I want to display the CURRENT WEATHER CONDITION
+				resultsArrayW = results.getJSONArray("weather");
+				int arrayLength = resultsArrayW.length();
+				
+				if(resultsArrayW == null){
+					Log.i("JSON GET OBJ", "NOT VALID");
+					Toast toast = Toast.makeText(_context, "GET JSON FAILED", Toast.LENGTH_SHORT);
+					toast.show();
+					
+				}else{
+					Toast toast = Toast.makeText(_context, "REQUEST RECEIVED!" + String.valueOf(arrayLength), Toast.LENGTH_SHORT);
+					toast.show();
+					JSONObject newObj;
+					GridLayout gridLL = new com.klusman.formthings.WeatherDisplayLayout(_context);
+					for(int i=0;i < resultsArrayW.length();i++){
+						newObj = resultsArrayW.getJSONObject(i);
+						Log.i("TEAR IT UP", newObj.getString("date"));
+						//TextView myCond = (TextView) gridLL.findViewById(1);
+						TextView myDate = (TextView) gridLL.findViewById(2);
+						TextView myHigh = (TextView) gridLL.findViewById(3);
+						TextView myLow = (TextView) gridLL.findViewById(4);
+						TextView myWind = (TextView) gridLL.findViewById(5);
+						myDate.setText(newObj.getString("date"));
+						myHigh.setText(newObj.getString("tempMaxF"));
+						myLow.setText(newObj.getString("tempMinF"));
+						myWind.setText(newObj.getString("windspeedMiles"));
+						
+						ll.addView(gridLL);
+					}
+					
+				}
+			}catch (JSONException e){
+				Log.e("JSON ERROR", "JSON ERROR");
+			}
 			
 		}
 	}

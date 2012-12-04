@@ -29,22 +29,27 @@ public class WeatherDisplayLayout extends GridLayout{
 		ImageView theImage = new ImageView(_context);
 		theImage.setImageResource(R.drawable.ic_launcher);
 		_weatherCond = new TextView(_context);
+		_weatherCond.setId(1);
 		
 		TextView theDate = new TextView(_context);
 		theDate.setText("Date: ");
 		_date = new TextView(_context);
+		_date.setId(2);
 		
 		TextView theHigh = new TextView(_context);
 		theHigh.setText("Temp(High): ");
 		_high = new TextView(_context);
+		_high.setId(3);
 		
 		TextView theLow = new TextView(_context);
 		theLow.setText("Temp(LOW): ");
 		_low = new TextView(_context);
+		_low.setId(4);
 		
 		TextView theWindspeed = new TextView(_context);
 		theWindspeed.setText("Windspeed: ");
 		_windspeed = new TextView(_context);
+		_windspeed.setId(5);
 		
 		this.addView(theImage);
 		this.addView(_weatherCond);
