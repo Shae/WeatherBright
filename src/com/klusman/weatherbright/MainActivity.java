@@ -27,8 +27,8 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.GridLayout;
 import android.widget.LinearLayout;
+//import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -52,6 +52,9 @@ public class MainActivity extends Activity {
 	LinearLayout W;
 	JSONArray resultsArrayW;
 	Context _context = this;
+	JSONObject newObj;
+	//ListView lv = new ListView(this);
+	LinearLayout listHold;
 
 
 	@Override
@@ -108,7 +111,7 @@ public class MainActivity extends Activity {
 		EditText et = (EditText) lineAndBtn.findViewById(1);
 		et.setBackgroundColor(0xFFFFFF00);
 		lineAndBtn.setGravity(Gravity.CENTER_HORIZONTAL);
-		
+
 		//  onCLICK LISTENER
 		btn.setOnClickListener(new View.OnClickListener() {
 
@@ -122,44 +125,48 @@ public class MainActivity extends Activity {
 				}else{
 					Log.i("Button Clicked :",areaCode.getText().toString() );  //Text field HAS data!
 					finalAreaCode = areaCode.getText().toString();
+
 				}
 				// Make the keyboard go away on button click!
 				InputMethodManager imm = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
 				imm.hideSoftInputFromWindow(v.getWindowToken(), 0);   
 				getDays((arrayPosition + 1));
-				//W.refreshDrawableState();
-				
 			}
 		});
 
-		
+
 		LinearLayout b1 = com.klusman.formthings.BlankLineBorder.blankLine(this);
 		LinearLayout b2 = com.klusman.formthings.BlankLineBorder.blankLine(this);
 		LinearLayout b3 = com.klusman.formthings.BlankLineBorder.blankLine(this);
-		
-		
+
+
 		ll.addView(spinnerLayout); // day spinner
 		ll.addView(b1); //blank line
 		ll.addView(lineAndBtn); // zip code and Btn
 		ll.addView(b3);//blank line
 		ll.addView(tv); // forecast day title
 		ll.addView(b2);//blank line
-		
-	 	_weatherLayout1 = new com.klusman.formthings.WeatherDisplayLayoutLL(this);
-/*		_weatherLayout2 = new WeatherDisplayLayout(this);
+
+
+
+
+
+		//_weatherLayout1 = new com.klusman.formthings.WeatherDisplayLayoutLL(this);
+		/*		_weatherLayout2 = new WeatherDisplayLayout(this);
 		_weatherLayout3 = new WeatherDisplayLayout(this);
 		_weatherLayout4 = new WeatherDisplayLayout(this);
 		_weatherLayout5 = new WeatherDisplayLayout(this);
-		
 
-			
+
+
 			ll.addView(_weatherLayout2);
 			ll.addView(_weatherLayout3);
 			ll.addView(_weatherLayout4);
 			ll.addView(_weatherLayout5);
-*/
-		
-	    ll.addView(_weatherLayout1);
+		 */
+
+		// ll.addView(_weatherLayout1);
+		//ll.addView(lv);
 		sv.addView(ll);
 		setContentView(sv);
 
@@ -175,26 +182,26 @@ public class MainActivity extends Activity {
 	private void getDays(int daySpan){
 		String dayString = String.valueOf(daySpan);
 		String areaCode = finalAreaCode;
-				
+
 		Log.i("DAYS TO GET", "Pull this many days: " + dayString );
-		
+
 		//String baseURL = "http://free.worldweatheronline.com/feed/weather.ashx?q=" + areaCode + "98524&format=JSON&num_of_days=" + daySpan + "&key=2a0cc91795015022122811";
 		//String baseURL = "http://free.worldweatheronline.com/feed/weather.ashx";
 		//String messURL = "http://free.worldweatheronline.com/feed/weather.ashx" + "?q=" + finalAreaCode + "&format=json&num_of_days=" + daySpan + "&key=2a0cc91795015022122811";
 		String messURL = "http://free.worldweatheronline.com/feed/weather.ashx?q=" + areaCode + "&format=json&num_of_days=" + daySpan + "&key=2a0cc91795015022122811";
 		String qs;
-		
-	try{
+
+		try{
 			qs = URLEncoder.encode(messURL, "UTF-8");
 			Log.i("URL to CALL", qs);  // WORKS!!!!!!
 		} catch(Exception e){
 			Log.e("BAD URL", "Encoding Problem");
 			qs = "";
 		}
-		
+
 		URL finalURL;
-		
-	try{
+
+		try{
 			finalURL = new URL(messURL);
 			QuoteRequest qr = new QuoteRequest();
 			qr.execute(finalURL);
@@ -202,12 +209,47 @@ public class MainActivity extends Activity {
 		} catch(MalformedURLException e){
 			Log.e("BAD URL", "URL Problem Final");
 		}
-	
+
 	}
 
+	private void lineBuild (Context context){
+		
+		for(int i=0;i < (resultsArrayW.length()) ;i++){
+			
+			LinearLayout myLL = new com.klusman.formthings.WeatherDisplayLayoutLL(_context);
+			TextView myDate = (TextView) myLL.findViewById(2);
+			TextView myHigh = (TextView) myLL.findViewById(3);
+			TextView myLow = (TextView) myLL.findViewById(4);
+			TextView myWind = (TextView) myLL.findViewById(5);
+
+
+			try{
+				newObj = resultsArrayW.getJSONObject(i);
+				Log.i("TEAR IT UP", newObj.getString("date"));
+				
+				String DATE = "Date: " + newObj.getString("date");
+				myDate.setText(DATE);
+				
+				String MAX = "Temp(High): " + newObj.getString("tempMaxF");
+				myHigh.setText(MAX);
+				
+				String MIN = "Temp(Low): " + newObj.getString("tempMinF");
+				myLow.setText(MIN);
+				
+				String WIND = "Windspeed: " + newObj.getString("windspeedMiles");
+				myWind.setText(WIND);
+				
+			}catch(JSONException e){
+				Log.e("onClick JSON", "failure");
+			}
+			ll.addView(myLL);
+			Log.i("TEST", "loop");
+		}
+	}
+	
 	private class QuoteRequest extends AsyncTask<URL, Void, String>{
 
-		
+
 		@Override
 		protected String doInBackground(URL... urls) {
 			String response = "";
@@ -216,50 +258,33 @@ public class MainActivity extends Activity {
 			}
 			return response;
 		}
-		
+
 		@Override
 		protected void onPostExecute(String result){
 			Log.i("URL RESPONSE:", result);
-			
+
 			try{
 				JSONObject json = new JSONObject(result);
 				JSONObject results = json.getJSONObject("data");
-				JSONArray resultsArray = results.getJSONArray("current_condition");  // If I want to display the CURRENT WEATHER CONDITION
+				//JSONArray resultsArray = results.getJSONArray("current_condition");  // If I want to display the CURRENT WEATHER CONDITION
 				resultsArrayW = results.getJSONArray("weather");
 				int arrayLength = resultsArrayW.length();
-				
+
 				if(resultsArrayW == null){
 					Log.i("JSON GET OBJ", "NOT VALID");
 					Toast toast = Toast.makeText(_context, "GET JSON FAILED", Toast.LENGTH_SHORT);
 					toast.show();
-					
+
 				}else{
 					Toast toast = Toast.makeText(_context, "REQUEST RECEIVED!" + String.valueOf(arrayLength), Toast.LENGTH_SHORT);
 					toast.show();
-					JSONObject newObj;
-					GridLayout gridLL = new com.klusman.formthings.WeatherDisplayLayout(_context);
-					for(int i=0;i < resultsArrayW.length();i++){
-						newObj = resultsArrayW.getJSONObject(i);
-						Log.i("TEAR IT UP", newObj.getString("date"));
-						//TextView myCond = (TextView) gridLL.findViewById(1);
-						TextView myDate = (TextView) gridLL.findViewById(2);
-						TextView myHigh = (TextView) gridLL.findViewById(3);
-						TextView myLow = (TextView) gridLL.findViewById(4);
-						TextView myWind = (TextView) gridLL.findViewById(5);
-						myDate.setText(newObj.getString("date"));
-						myHigh.setText(newObj.getString("tempMaxF"));
-						myLow.setText(newObj.getString("tempMinF"));
-						myWind.setText(newObj.getString("windspeedMiles"));
-						
-						ll.addView(gridLL);
-					}
-					
+					lineBuild(_context);
 				}
 			}catch (JSONException e){
 				Log.e("JSON ERROR", "JSON ERROR");
 			}
-			
+
 		}
 	}
-	
+
 }

@@ -5,19 +5,19 @@ public interface dayInterface {
 	// Set Day
 	public boolean setDay(String date);
 	// Set Temp High
-	public boolean setTempHigh(int intHigh);
+	public boolean setTempHigh(String intHigh);
 	// Set Temp Low
-	public boolean setTempLow(int intLow);
+	public boolean setTempLow(String intLow);
 	// Set Wind Speed
-	public boolean setWindSpeed(int intSpeed);
+	public boolean setWindSpeed(String intSpeed);
 	
 	// Get Day
 	public String getDay();
 	// Get Temp High
-	public int getTempHigh();
+	public String getTempHigh();
 	// Get Temp Low
-	public int getTempLow();
+	public String getTempLow();
 	// Get Wind Speed
-	public int getWindSpeed();
+	public String getWindSpeed();
 
 }

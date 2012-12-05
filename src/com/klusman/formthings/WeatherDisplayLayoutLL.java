@@ -1,103 +1,116 @@
 package com.klusman.formthings;
 
-import com.klusman.weatherbright.R;
+
+import com.klusman.dayInfo.dayInterface;
 
 import android.content.Context;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class WeatherDisplayLayoutLL extends LinearLayout{
+public class WeatherDisplayLayoutLL extends LinearLayout implements dayInterface{
 	
 		ImageView _image;
-		TextView _weatherCond;
 		TextView _date;
 		TextView _high;
 		TextView _low;
 		TextView _windspeed;
 		Context _context;
+		String aDate = "xx-xx-xxxx";
+		String aHigh = "00";
+		String aLow = "00";
+		String aWind = "NONE";
 		LayoutParams lp;
 		
 		public WeatherDisplayLayoutLL(Context context){
 			super(context);
 			
-			LinearLayout dayInfoLayout = new LinearLayout(_context);
-			dayInfoLayout.setOrientation(LinearLayout.VERTICAL);
+			//LinearLayout dayInfoLayout = new LinearLayout(_context);
+			this.setOrientation(LinearLayout.VERTICAL);
 			lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+			this.setLayoutParams(lp);
 			_context = context;	
 			
-			 
-			ImageView theImage = new ImageView(_context);
-			theImage.setImageResource(R.drawable.ic_launcher);
-			_weatherCond = new TextView(_context);
-			_weatherCond.setId(1);
-			
-			TextView theDate = new TextView(_context);
-			theDate.setText("Date: ");
+/*
+			// IMAGE
+
+			_image.setImageResource(R.drawable.ic_launcher);
+			_image.setId(1);
+			this.addView(_image);
+*/	
+			// DATE
 			_date = new TextView(_context);
 			_date.setId(2);
+			_date.setText("Date: " + aDate);
+			this.addView(_date);
 			
-			TextView theHigh = new TextView(_context);
-			theHigh.setText("Temp(High): ");
+
 			_high = new TextView(_context);
 			_high.setId(3);
+			_high.setText("Temp(High): " + aHigh);
+			this.addView(_high);
 			
-			TextView theLow = new TextView(_context);
-			theLow.setText("Temp(LOW): ");
+
 			_low = new TextView(_context);
 			_low.setId(4);
-			
-			TextView theWindspeed = new TextView(_context);
-			theWindspeed.setText("Windspeed: ");
+			_low.setText("Temp(Low): " + aLow);
+			this.addView(_low);
+		
+
 			_windspeed = new TextView(_context);
 			_windspeed.setId(5);
-			
-			
-			// Setting up layouts and data lines
-			LinearLayout wthr = new LinearLayout(_context);
-			wthr.setLayoutParams(lp);
-			//wthr.setOrientation(LinearLayout.HORIZONTAL);
-			wthr.addView(theImage);
-			wthr.addView(_weatherCond);			
-			this.addView(wthr);
-			
-			LinearLayout date = new LinearLayout(_context);
-			date.setLayoutParams(lp);
-			//date.setOrientation(LinearLayout.HORIZONTAL);
-			date.addView(theDate);
-			date.addView(_date);
-			this.addView(date);
-
-			LinearLayout high = new LinearLayout(_context);
-			high.setLayoutParams(lp);
-			//high.setOrientation(LinearLayout.HORIZONTAL);
-			high.addView(theHigh);
-			high.addView(_high);
-			this.addView(high);
-			
-			LinearLayout low = new LinearLayout(_context);
-			low.setLayoutParams(lp);
-			//low.setOrientation(LinearLayout.HORIZONTAL);
-			low.addView(theLow);
-			low.addView(_low);
-			this.addView(low);
-			
-			LinearLayout wind = new LinearLayout(_context);
-			wind.setLayoutParams(lp);
-			wind.setOrientation(LinearLayout.HORIZONTAL);
-			wind.addView(theWindspeed);
-			wind.addView(_windspeed);
-			this.addView(wind);
+			_windspeed.setText("WindSpeed: " + aWind);
+			this.addView(_windspeed);
 			
 
-			
-			
-			
 
-			//LinearLayout ll = com.klusman.formthings.BlankLineBorder.blankLine(_context);
-			//dayInfoLayout.addView(ll);
-			//this.addView(dayInfoLayout);
+			LinearLayout ll = com.klusman.formthings.BlankLineBorder.blankLine(_context);
+			this.addView(ll);
 			
+		}
+
+		@Override
+		public boolean setDay(String date) {
+			this.aDate = date;
+			return true;
+		}
+		
+		@Override
+		public boolean setTempHigh(String intHigh) {
+			this.aHigh = intHigh;
+			return true;
+		}
+
+		@Override
+		public boolean setTempLow(String intLow) {
+			this.aLow = intLow;
+			return true;
+		}
+
+		@Override
+		public boolean setWindSpeed(String intSpeed) {
+			this.aWind = intSpeed;
+			return true;
+		}
+
+		@Override
+		public String getDay() {
+			return this.aDate;
+		}
+
+		@Override
+		public String getTempHigh() {
+			return this.aHigh;
+		}
+
+		@Override
+		public String getTempLow() {
+			return this.aLow;
+		}
+
+		@Override
+		public String getWindSpeed() {
+			return this.aWind;
 		}
 
 }

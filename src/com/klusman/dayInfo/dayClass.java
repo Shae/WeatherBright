@@ -3,12 +3,12 @@ package com.klusman.dayInfo;
 public class dayClass implements dayInterface {
 
 	String day;
-	int high;
-	int low;
-	int windSpeed;
+	String high;
+	String low;
+	String windSpeed;
 	
 	
-	public dayClass(String day, int high, int low, int windSpeed){
+	public dayClass(String day, String high, String low, String windSpeed){
 		setDay(day);
 		setTempHigh(high);
 		setTempLow(low);
@@ -23,19 +23,19 @@ public class dayClass implements dayInterface {
 	}
 	
 	@Override
-	public boolean setTempHigh(int intHigh) {
+	public boolean setTempHigh(String intHigh) {
 		this.high = intHigh;
 		return true;
 	}
 
 	@Override
-	public boolean setTempLow(int intLow) {
+	public boolean setTempLow(String intLow) {
 		this.low = intLow;
 		return true;
 	}
 
 	@Override
-	public boolean setWindSpeed(int intSpeed) {
+	public boolean setWindSpeed(String intSpeed) {
 		this.windSpeed = intSpeed;
 		return true;
 	}
@@ -46,17 +46,17 @@ public class dayClass implements dayInterface {
 	}
 
 	@Override
-	public int getTempHigh() {
+	public String getTempHigh() {
 		return this.high;
 	}
 
 	@Override
-	public int getTempLow() {
+	public String getTempLow() {
 		return this.low;
 	}
 
 	@Override
-	public int getWindSpeed() {
+	public String getWindSpeed() {
 		return this.windSpeed;
 	}
 
