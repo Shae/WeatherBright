@@ -72,79 +72,151 @@ public class MainActivity extends Activity {
 		tv.setTextSize(30);
 		tv.setGravity(Gravity.CENTER_HORIZONTAL);
 
-		// Detect network connection
+		
 		connected = com.klusman.webStuff.WebConnections.getConnectionStatus(this);
+		// Detect network connection
+
 		if (connected){
 			Log.i("NETWORK STATUS", com.klusman.webStuff.WebConnections.getConnectionType(this));
-		}
 
 
+			// SPINNER
+			LinearLayout spinnerLayout = com.klusman.formthings.Spinners.daysSpinner(this, myArray);
+			spinnerLayout.findViewById(1).setBackgroundColor(0xFFFFFFFF);
+			Spinner spin = (Spinner) spinnerLayout.findViewById(1);
+			spin.setOnItemSelectedListener(new OnItemSelectedListener() {
 
-		// SPINNER
-		LinearLayout spinnerLayout = com.klusman.formthings.Spinners.daysSpinner(this, myArray);
-		spinnerLayout.findViewById(1).setBackgroundColor(0xFFFFFFFF);
-		Spinner spin = (Spinner) spinnerLayout.findViewById(1);
-		spin.setOnItemSelectedListener(new OnItemSelectedListener() {
+				@Override
+				public void onItemSelected(AdapterView<?> arg0, View arg1,
+						int arg2, long arg3) {
+					// Get the item Selected and Print out in log
+					String arrayItem = myArray[arg2];
+					Log.i("ITEM SELECTED", arrayItem);
+					tv.setText((arg2 + 1) + "-Day Weather Forecast");
+					arrayPosition = arg2;
+				}
 
-			@Override
-			public void onItemSelected(AdapterView<?> arg0, View arg1,
-					int arg2, long arg3) {
-				// Get the item Selected and Print out in log
-				String arrayItem = myArray[arg2];
-				Log.i("ITEM SELECTED", arrayItem);
-				tv.setText((arg2 + 1) + "-Day Weather Forecast");
-				arrayPosition = arg2;
-			}
-
-			@Override
-			public void onNothingSelected(AdapterView<?> arg0) {
-				Log.i("ITEM SELECTED", "NO ITEM SELECTED");
-
-			}
-		});
-
-		LinearLayout lineAndBtn = com.klusman.formthings.EditFieldPlusBtn.entryLinePlusButton(this, "Enter Zip Code", "Go");	
-		Button btn = (Button) lineAndBtn.findViewById(2);
-		btn.setBackgroundColor(0xFFFFFFFF);
-		EditText et = (EditText) lineAndBtn.findViewById(1);
-		et.setBackgroundColor(0xFFFFFF00);
-		lineAndBtn.setGravity(Gravity.CENTER_HORIZONTAL);
-
-		//  onCLICK LISTENER
-		btn.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-
-				EditText areaCode = (EditText) v.getTag();
-
-				if(areaCode.getText().toString().compareTo("") == 0){   // Testing to see if "areaCode" is empty. (0 = empty, 1= not empty)
-					Log.i("Button Clicked :", "Add something to your text field!");  //test line if EMPTY
-				}else{
-					Log.i("Button Clicked :",areaCode.getText().toString() );  //Text field HAS data!
-					finalAreaCode = areaCode.getText().toString();
+				@Override
+				public void onNothingSelected(AdapterView<?> arg0) {
+					Log.i("ITEM SELECTED", "NO ITEM SELECTED");
 
 				}
-				// Make the keyboard go away on button click!
-				InputMethodManager imm = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
-				imm.hideSoftInputFromWindow(v.getWindowToken(), 0);   
-				getDays((arrayPosition + 1));
+			});
+
+			LinearLayout lineAndBtn = com.klusman.formthings.EditFieldPlusBtn.entryLinePlusButton(this, "Enter Zip Code", "Go");	
+			Button btn = (Button) lineAndBtn.findViewById(2);
+			btn.setBackgroundColor(0xFFFFFFFF);
+			EditText et = (EditText) lineAndBtn.findViewById(1);
+			et.setBackgroundColor(0xFFFFFF00);
+			lineAndBtn.setGravity(Gravity.CENTER_HORIZONTAL);
+
+			//  onCLICK LISTENER
+			btn.setOnClickListener(new View.OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+
+					EditText areaCode = (EditText) v.getTag();
+
+					if(areaCode.getText().toString().compareTo("") == 0){   // Testing to see if "areaCode" is empty. (0 = empty, 1= not empty)
+						Log.i("Button Clicked :", "Add something to your text field!");  //test line if EMPTY
+					}else{
+						Log.i("Button Clicked :",areaCode.getText().toString() );  //Text field HAS data!
+						finalAreaCode = areaCode.getText().toString();
+
+						//FIND A VIEW BY TAG and REMOVE IT before the next Import of DATA
+						if(ll.findViewById(40) != null){
+							ll.removeView(ll.findViewById(40));
+							ll.removeView(ll.findViewById(40));
+							ll.removeView(ll.findViewById(40));
+							ll.removeView(ll.findViewById(40));
+							ll.removeView(ll.findViewById(40));
+						}
+
+
+					}
+					// Make the keyboard go away on button click!
+					InputMethodManager imm = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
+					imm.hideSoftInputFromWindow(v.getWindowToken(), 0);   
+					getDays((arrayPosition + 1));
+				}
+			});
+			
+			LinearLayout b1 = com.klusman.formthings.BlankLineBorder.blankLine(this);
+			LinearLayout b3 = com.klusman.formthings.BlankLineBorder.blankLine(this);
+			ll.addView(spinnerLayout); // day spinner
+			ll.addView(b1); //blank line
+			ll.addView(lineAndBtn); // zip code and Btn
+			ll.addView(b3);//blank line
+			ll.addView(tv); // forecast day title
+
+			
+// If No Connection Detected			
+		}else{ 
+			Log.i("CONNECTION", "NONE FOUND.  RUNNING ELSE PARAMETER");
+
+			if(resultsArrayW != null){
+				
+				Button btn = new Button(this);
+				btn.setText("Pull Saved Data");
+				btn.setTextSize(24);
+				btn.setId(2);
+				btn.setGravity(Gravity.CENTER_HORIZONTAL);
+				ll.addView(btn);
+				
+				//Log.i("STOP", "stop point 1");
+				for(int i=0;i < (resultsArrayW.length()) ;i++){
+
+					LinearLayout myLL = new com.klusman.formthings.WeatherDisplayLayoutLL(this);
+					TextView myDate = (TextView) myLL.findViewById(2);
+					TextView myHigh = (TextView) myLL.findViewById(3);
+					TextView myLow = (TextView) myLL.findViewById(4);
+					TextView myWind = (TextView) myLL.findViewById(5);
+
+
+					try{
+						newObj = resultsArrayW.getJSONObject(i);
+						Log.i("TEAR IT UP", newObj.getString("date"));
+
+						String DATE = "Date: " + newObj.getString("date");
+						myDate.setText(DATE);
+
+						String MAX = "Temp(High): " + newObj.getString("tempMaxF");
+						myHigh.setText(MAX);
+
+						String MIN = "Temp(Low): " + newObj.getString("tempMinF");
+						myLow.setText(MIN);
+
+						String WIND = "Windspeed: " + newObj.getString("windspeedMiles");
+						myWind.setText(WIND);
+
+					}catch(JSONException e){
+						Log.e("onClick JSON", "failure");
+					}
+
+					myLL.setBackgroundColor(0xFF00FFFF);
+					myLL.setId(40);
+
+					ll.addView(myLL);
+					Log.i("TEST", "loop");
+				}
+			}else{
+				TextView tv = new TextView(this);
+				tv.setText("\r\n" + "NO Internet Connection" + "\r\n" + "and" + "\r\n" +"NO Previous History to Pull Request From." + "\r\n" + "\r\n" + "Please Find an Internet Connection to Establish a Search History." + "\r\n");
+				tv.setGravity(Gravity.CENTER_HORIZONTAL);
+				tv.setTextSize(25);
+
+				ll.addView(tv);
+				
+				Log.i("DATA", "NO DATA to Pull yet");
 			}
-		});
 
 
-		LinearLayout b1 = com.klusman.formthings.BlankLineBorder.blankLine(this);
+		}
+
 		LinearLayout b2 = com.klusman.formthings.BlankLineBorder.blankLine(this);
-		LinearLayout b3 = com.klusman.formthings.BlankLineBorder.blankLine(this);
 
-
-		ll.addView(spinnerLayout); // day spinner
-		ll.addView(b1); //blank line
-		ll.addView(lineAndBtn); // zip code and Btn
-		ll.addView(b3);//blank line
-		ll.addView(tv); // forecast day title
 		ll.addView(b2);//blank line
-		listHold = new LinearLayout(this);
 
 
 		sv.addView(ll);
@@ -221,12 +293,15 @@ public class MainActivity extends Activity {
 			}
 
 			myLL.setBackgroundColor(0xFF00FFFF);
+			myLL.setId(40);
 
 			ll.addView(myLL);
 			Log.i("TEST", "loop");
 		}
 
 	}
+	
+	
 	
 	@SuppressWarnings("unchecked")
 	private HashMap<String, String> getStoredData(){
@@ -276,7 +351,7 @@ public class MainActivity extends Activity {
 					lineBuild(_context);
 					_history.put("WeatherSave", results.toString());
 					SaveStuff.storeObjectFile(_context, "saveDataObj", _history, false);  // save local as JSON obj string
-					SaveStuff.storeStringFile(_context, "saveDataString", results.toString(), false);
+					//SaveStuff.storeStringFile(_context, "saveDataString", results.toString(), false);
 				}
 			}catch (JSONException e){
 				Log.e("JSON ERROR", "JSON ERROR");
