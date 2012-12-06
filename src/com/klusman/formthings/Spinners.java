@@ -21,12 +21,7 @@ public class Spinners {
 		
 		ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_dropdown_item, myArray);
 		daySpin.setAdapter(spinnerArrayAdapter);
-		//String choice = spinnerArrayAdapter.getItem((daySpin.getSelectedItemPosition());
-		//String choice = spinnerArrayAdapter.getItem((daySpin.getSelectedItemPosition());
-		
-	
-		
-		//Log.i("SPINNER CHOICE: ", "TEST TEST");
+
 		ll.addView(daySpin);
 		
 		return ll;

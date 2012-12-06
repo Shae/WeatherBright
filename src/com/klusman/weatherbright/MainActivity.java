@@ -4,13 +4,14 @@ package com.klusman.weatherbright;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.HashMap;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
-import com.klusman.formthings.WeatherDisplayLayout;
+import com.klusman.dayInfo.ReadStuff;
+import com.klusman.dayInfo.SaveStuff;
 import com.klusman.formthings.WeatherDisplayLayoutLL;
 import com.klusman.webStuff.WebConnections;
 
@@ -28,7 +29,6 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-//import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -39,23 +39,18 @@ public class MainActivity extends Activity {
 	ScrollView sv;
 	LinearLayout ll;
 	LinearLayout.LayoutParams lp;
-	String [] myArray = {"1-day Forecast","2-day forecast","3-day forecast","4-day forecast","5-day forecast"};
+	String [] myArray = {"1-Day Forecast","2-Day forecast","3-Day forecast","4-Day forecast","5-Day forecast"};
 	Boolean connected = false;
 	int arrayPosition = 0;
 	String finalAreaCode = "98524";
 	TextView tv;
 	WeatherDisplayLayoutLL _weatherLayout1;
-	WeatherDisplayLayout _weatherLayout2;
-	WeatherDisplayLayout _weatherLayout3;
-	WeatherDisplayLayout _weatherLayout4;
-	WeatherDisplayLayout _weatherLayout5;
 	LinearLayout W;
 	JSONArray resultsArrayW;
 	Context _context = this;
 	JSONObject newObj;
-	//ListView lv = new ListView(this);
 	LinearLayout listHold;
-
+	HashMap<String,	String> _history;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +58,9 @@ public class MainActivity extends Activity {
 
 		sv = new ScrollView(this);
 		ll = new LinearLayout(this);
+		_history = getStoredData();
+		Log.i("HISTORY READ", _history.toString());
+		
 		ll.setOrientation(LinearLayout.VERTICAL);
 		lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
 		ll.setLayoutParams(lp);
@@ -146,27 +144,9 @@ public class MainActivity extends Activity {
 		ll.addView(b3);//blank line
 		ll.addView(tv); // forecast day title
 		ll.addView(b2);//blank line
+		listHold = new LinearLayout(this);
 
 
-
-
-
-		//_weatherLayout1 = new com.klusman.formthings.WeatherDisplayLayoutLL(this);
-		/*		_weatherLayout2 = new WeatherDisplayLayout(this);
-		_weatherLayout3 = new WeatherDisplayLayout(this);
-		_weatherLayout4 = new WeatherDisplayLayout(this);
-		_weatherLayout5 = new WeatherDisplayLayout(this);
-
-
-
-			ll.addView(_weatherLayout2);
-			ll.addView(_weatherLayout3);
-			ll.addView(_weatherLayout4);
-			ll.addView(_weatherLayout5);
-		 */
-
-		// ll.addView(_weatherLayout1);
-		//ll.addView(lv);
 		sv.addView(ll);
 		setContentView(sv);
 
@@ -185,9 +165,6 @@ public class MainActivity extends Activity {
 
 		Log.i("DAYS TO GET", "Pull this many days: " + dayString );
 
-		//String baseURL = "http://free.worldweatheronline.com/feed/weather.ashx?q=" + areaCode + "98524&format=JSON&num_of_days=" + daySpan + "&key=2a0cc91795015022122811";
-		//String baseURL = "http://free.worldweatheronline.com/feed/weather.ashx";
-		//String messURL = "http://free.worldweatheronline.com/feed/weather.ashx" + "?q=" + finalAreaCode + "&format=json&num_of_days=" + daySpan + "&key=2a0cc91795015022122811";
 		String messURL = "http://free.worldweatheronline.com/feed/weather.ashx?q=" + areaCode + "&format=json&num_of_days=" + daySpan + "&key=2a0cc91795015022122811";
 		String qs;
 
@@ -213,7 +190,7 @@ public class MainActivity extends Activity {
 	}
 
 	private void lineBuild (Context context){
-		
+
 		for(int i=0;i < (resultsArrayW.length()) ;i++){
 			
 			LinearLayout myLL = new com.klusman.formthings.WeatherDisplayLayoutLL(_context);
@@ -242,9 +219,27 @@ public class MainActivity extends Activity {
 			}catch(JSONException e){
 				Log.e("onClick JSON", "failure");
 			}
+
+			myLL.setBackgroundColor(0xFF00FFFF);
+
 			ll.addView(myLL);
 			Log.i("TEST", "loop");
 		}
+
+	}
+	
+	@SuppressWarnings("unchecked")
+	private HashMap<String, String> getStoredData(){
+		Object stored = ReadStuff.readObjectFile(_context, "saveDataObj", false);
+		
+		HashMap<String, String> myStoredData;
+		if(stored == null){
+			Log.i("READ DATA", "NO PAST DATA SAVED");
+			myStoredData = new HashMap<String, String>();
+		}else{
+			myStoredData = (HashMap<String, String>) stored;
+		}
+		return myStoredData;
 	}
 	
 	private class QuoteRequest extends AsyncTask<URL, Void, String>{
@@ -279,6 +274,9 @@ public class MainActivity extends Activity {
 					Toast toast = Toast.makeText(_context, "REQUEST RECEIVED!" + String.valueOf(arrayLength), Toast.LENGTH_SHORT);
 					toast.show();
 					lineBuild(_context);
+					_history.put("WeatherSave", results.toString());
+					SaveStuff.storeObjectFile(_context, "saveDataObj", _history, false);  // save local as JSON obj string
+					SaveStuff.storeStringFile(_context, "saveDataString", results.toString(), false);
 				}
 			}catch (JSONException e){
 				Log.e("JSON ERROR", "JSON ERROR");
