@@ -56,6 +56,7 @@ public class MainActivity extends Activity {
 	LinearLayout listHold;
 	HashMap<String,	String> _history;
 
+	@SuppressWarnings("unused")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -166,19 +167,23 @@ public class MainActivity extends Activity {
 			if(file == null){
 				Log.i("FILE SEARCH", "NO DATA FOUND!");
 				TextView tv = new TextView(this);
-				tv.setText("\r\n" + "NO Internet Connection" + "\r\n" + "and" + "\r\n" +"NO Previous History to Pull Request From." + "\r\n" + "\r\n" + "Please Find an Internet Connection to Establish a Search History." + "\r\n");
+				tv.setText("\r\n" + "NO Internet Connection" + "\r\n" + "and" + "\r\n" +"NO Previous History to Pull From." + "\r\n" + "\r\n" + "Please Find an Internet Connection to Establish a Search History." + "\r\n");
 				tv.setGravity(Gravity.CENTER_HORIZONTAL);
 				tv.setTextSize(25);
-
 				ll.addView(tv);
 				
 			}else{
 				Log.i("FILE SEARCH", "DATA HAS BEEN FOUND!");
-			/*	
-				JSONObject jb = (JSONObject) ReadStuff.readObjectFile(_context, file, false);
-				String myStr = _history.get("WeatherSave");
-				JSONObject jOBJ =  _history.get("WeatherSave");
-				Log.i("READ TEST", myStr);
+			try{
+				String st = _history.get("WeatherSave");
+				JSONObject js = new JSONObject(st);
+				Log.i("JSON OBJECT", "WORKED!");
+				resultsArrayW = js.getJSONArray("weather");
+				lineBuild(_context);
+			}catch(JSONException e){
+				e.printStackTrace();
+			}
+	/*			
 				
 				try{
 					//JSONObject json = new JSONObject(myStr);
@@ -194,11 +199,11 @@ public class MainActivity extends Activity {
 					Log.e("ERROR","Failed to read saved data");
 				}
 				*/
-				TextView tv = new TextView(this);
-				String hashed = _history.toString();
-				tv.setText(hashed + "\r\n" + "\r\n" + "   - I GOT IT THIS FAR.  MUST SAVE FOR GITHUB PUSH- ");
+				//TextView tv = new TextView(this);
+				//String hashed = _history.toString();
+				//tv.setText(hashed + "\r\n" + "\r\n" + "   - I GOT IT THIS FAR.  MUST SAVE FOR GITHUB PUSH- ");
 				
-				ll.addView(tv);
+				//ll.addView(tv);
 				
 			}
 			
