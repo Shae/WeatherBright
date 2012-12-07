@@ -173,16 +173,42 @@ public class MainActivity extends Activity {
 				ll.addView(tv);
 				
 			}else{
+				TextView tv = new TextView(this);
+				tv.setText("No Network Connection." + "\r\n" + "\r\n" + "\r\n");
+				tv.setTextSize(30);
+				tv.setGravity(Gravity.CENTER_HORIZONTAL);
+				ll.addView(tv);
+				Button btn = new Button(this);
+				btn.setText("Use Last Pull");
+				btn.setTextSize(24);
+
+				btn.setId(2);
+				btn.setGravity(Gravity.CENTER_HORIZONTAL);
+				ll.addView(btn);
+				
+				btn.setOnClickListener(new View.OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+
+						try{
+							
+							String st = _history.get("WeatherSave");
+							JSONObject js = new JSONObject(st);
+							Log.i("JSON OBJECT", "WORKED!");
+							resultsArrayW = js.getJSONArray("weather");
+							lineBuild(_context);
+						}catch(JSONException e){
+							e.printStackTrace();
+						}
+						
+						
+						
+					}
+				});
+
 				Log.i("FILE SEARCH", "DATA HAS BEEN FOUND!");
-			try{
-				String st = _history.get("WeatherSave");
-				JSONObject js = new JSONObject(st);
-				Log.i("JSON OBJECT", "WORKED!");
-				resultsArrayW = js.getJSONArray("weather");
-				lineBuild(_context);
-			}catch(JSONException e){
-				e.printStackTrace();
-			}
+			
 	/*			
 				
 				try{
@@ -211,63 +237,7 @@ public class MainActivity extends Activity {
 		
 		}
 			
-			
-/*			
-
-
-			
-	
-	*/		/*
-			if(resultsArrayW != null){
-
-				Button btn = new Button(this);
-				btn.setText("Pull Saved Data");
-				btn.setTextSize(24);
-				btn.setId(2);
-				btn.setGravity(Gravity.CENTER_HORIZONTAL);
-				ll.addView(btn);
-
-				//Log.i("STOP", "stop point 1");
-				for(int i=0;i < (resultsArrayW.length()) ;i++){
-
-					LinearLayout myLL = new com.klusman.formthings.WeatherDisplayLayoutLL(this);
-					TextView myDate = (TextView) myLL.findViewById(2);
-					TextView myHigh = (TextView) myLL.findViewById(3);
-					TextView myLow = (TextView) myLL.findViewById(4);
-					TextView myWind = (TextView) myLL.findViewById(5);
-
-
-					try{
-						newObj = resultsArrayW.getJSONObject(i);
-						Log.i("TEAR IT UP", newObj.getString("date"));
-
-						String DATE = "Date: " + newObj.getString("date");
-						myDate.setText(DATE);
-
-						String MAX = "Temp(High): " + newObj.getString("tempMaxF");
-						myHigh.setText(MAX);
-
-						String MIN = "Temp(Low): " + newObj.getString("tempMinF");
-						myLow.setText(MIN);
-
-						String WIND = "Windspeed: " + newObj.getString("windspeedMiles");
-						myWind.setText(WIND);
-
-					}catch(JSONException e){
-						Log.e("onClick JSON", "failure");
-					}
-
-					myLL.setBackgroundColor(0xFF00FFFF);
-					myLL.setId(40);
-
-					ll.addView(myLL);
-					Log.i("TEST", "loop");
-				}
-				
-
-*/
-
-		//}
+		
 
 		LinearLayout b2 = com.klusman.formthings.BlankLineBorder.blankLine(this);
 
