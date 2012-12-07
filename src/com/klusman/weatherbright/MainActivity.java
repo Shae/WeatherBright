@@ -1,10 +1,13 @@
 package com.klusman.weatherbright;
 
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.HashMap;
+//import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,6 +22,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
+import android.util.JsonReader;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -76,7 +80,8 @@ public class MainActivity extends Activity {
 		connected = com.klusman.webStuff.WebConnections.getConnectionStatus(this);
 		// Detect network connection
 
-		if (connected){
+		if (connected  == true){
+			Log.i("NETWORK STATUS", "CONNECTED TO WEB");
 			Log.i("NETWORK STATUS", com.klusman.webStuff.WebConnections.getConnectionType(this));
 
 
@@ -152,18 +157,71 @@ public class MainActivity extends Activity {
 
 			
 // If No Connection Detected			
-		}else{ 
-			Log.i("CONNECTION", "NONE FOUND.  RUNNING ELSE PARAMETER");
+		//}else{ 
+		}else{
+			Log.i("CONNECTION", "NONE FOUND! Checking for Search History");
+			File file = new File("saveDataObj");
+			
+			
+			if(file == null){
+				Log.i("FILE SEARCH", "NO DATA FOUND!");
+				TextView tv = new TextView(this);
+				tv.setText("\r\n" + "NO Internet Connection" + "\r\n" + "and" + "\r\n" +"NO Previous History to Pull Request From." + "\r\n" + "\r\n" + "Please Find an Internet Connection to Establish a Search History." + "\r\n");
+				tv.setGravity(Gravity.CENTER_HORIZONTAL);
+				tv.setTextSize(25);
 
-			if(resultsArrayW != null){
+				ll.addView(tv);
 				
+			}else{
+				Log.i("FILE SEARCH", "DATA HAS BEEN FOUND!");
+			/*	
+				JSONObject jb = (JSONObject) ReadStuff.readObjectFile(_context, file, false);
+				String myStr = _history.get("WeatherSave");
+				JSONObject jOBJ =  _history.get("WeatherSave");
+				Log.i("READ TEST", myStr);
+				
+				try{
+					//JSONObject json = new JSONObject(myStr);
+					//JSONObject results = json.getJSONObject("data");
+					resultsArrayW = myStr.getJSONArray("weather");
+					int arrayLength = resultsArrayW.length();
+					String bla = String.valueOf(arrayLength);
+					
+					Log.i("TEST", "resultsArrayLength" + bla );
+					
+					
+				}catch(JSONException e){
+					Log.e("ERROR","Failed to read saved data");
+				}
+				*/
+				TextView tv = new TextView(this);
+				String hashed = _history.toString();
+				tv.setText(hashed + "\r\n" + "\r\n" + "   - I GOT IT THIS FAR.  MUST SAVE FOR GITHUB PUSH- ");
+				
+				ll.addView(tv);
+				
+			}
+			
+			
+		
+		}
+			
+			
+/*			
+
+
+			
+	
+	*/		/*
+			if(resultsArrayW != null){
+
 				Button btn = new Button(this);
 				btn.setText("Pull Saved Data");
 				btn.setTextSize(24);
 				btn.setId(2);
 				btn.setGravity(Gravity.CENTER_HORIZONTAL);
 				ll.addView(btn);
-				
+
 				//Log.i("STOP", "stop point 1");
 				for(int i=0;i < (resultsArrayW.length()) ;i++){
 
@@ -200,19 +258,11 @@ public class MainActivity extends Activity {
 					ll.addView(myLL);
 					Log.i("TEST", "loop");
 				}
-			}else{
-				TextView tv = new TextView(this);
-				tv.setText("\r\n" + "NO Internet Connection" + "\r\n" + "and" + "\r\n" +"NO Previous History to Pull Request From." + "\r\n" + "\r\n" + "Please Find an Internet Connection to Establish a Search History." + "\r\n");
-				tv.setGravity(Gravity.CENTER_HORIZONTAL);
-				tv.setTextSize(25);
-
-				ll.addView(tv);
 				
-				Log.i("DATA", "NO DATA to Pull yet");
-			}
 
+*/
 
-		}
+		//}
 
 		LinearLayout b2 = com.klusman.formthings.BlankLineBorder.blankLine(this);
 
@@ -317,6 +367,8 @@ public class MainActivity extends Activity {
 		return myStoredData;
 	}
 	
+	
+	
 	private class QuoteRequest extends AsyncTask<URL, Void, String>{
 
 
@@ -336,7 +388,6 @@ public class MainActivity extends Activity {
 			try{
 				JSONObject json = new JSONObject(result);
 				JSONObject results = json.getJSONObject("data");
-				//JSONArray resultsArray = results.getJSONArray("current_condition");  // If I want to display the CURRENT WEATHER CONDITION
 				resultsArrayW = results.getJSONArray("weather");
 				int arrayLength = resultsArrayW.length();
 
