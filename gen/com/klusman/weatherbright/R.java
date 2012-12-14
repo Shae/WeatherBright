@@ -11,7 +11,15 @@ public final class R {
     public static final class attr {
     }
     public static final class drawable {
-        public static final int ic_launcher=0x7f020000;
+        public static final int coldcold=0x7f020000;
+        public static final int coldtherm=0x7f020001;
+        public static final int grnblutherm=0x7f020002;
+        public static final int grnwarm=0x7f020003;
+        public static final int hothottherm=0x7f020004;
+        public static final int hottherm=0x7f020005;
+        public static final int ic_launcher=0x7f020006;
+        public static final int liteblutherm=0x7f020007;
+        public static final int medtherm=0x7f020008;
     }
     public static final class id {
         public static final int menu_settings=0x7f060000;
@@ -25,15 +33,10 @@ public final class R {
         public static final int menu_settings=0x7f030002;
     }
     public static final class style {
-        /** 
-        Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
-    
-
-            Theme customizations available in newer API levels can go in
-            res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
-        
+        /**  Base application theme, dependent on API level. This theme is replaced 
+		by AppBaseTheme from res/values-vXX/styles.xml on newer devices. 
+ Theme customizations available in newer API levels can go in res/values-vXX/styles.xml, 
+			while customizations related to backward-compatibility can go here. 
 
         Base application theme for API 11+. This theme completely replaces
         AppBaseTheme from res/values/styles.xml on API 11+ devices.
@@ -47,9 +50,40 @@ public final class R {
  API 14 theme customizations can go here. 
          */
         public static final int AppBaseTheme=0x7f040000;
-        /**  Application theme. 
- All customizations that are NOT specific to a particular API-level can go here. 
+        /**   
+	<style name="medTxtStyle-blk" parent="@android:style/TextAppearance.Medium">
+		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_height">fill_parent</item>
+		<item name="android:textColor">#000000</item>
+		<item name="android:typeface">normal</item>
+	</style>
+	
+	<style name="medTxtStyle-wht" parent="@android:style/TextAppearance.Medium">
+		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_height">fill_parent</item>
+		<item name="android:textColor">#FFFFFF</item>
+		<item name="android:typeface">normal</item>
+	</style>
+	
+	<style name="medTxtStyle-red" parent="@android:style/TextAppearance.Medium">
+		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_height">fill_parent</item>
+		<item name="android:textColor">#FF0000</item>
+		<item name="android:typeface">normal</item>
+	</style>
+	
+	<style name="medTxtStyle-oddblu" parent="@android:style/TextAppearance.Medium">
+		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_height">fill_parent</item>
+		<item name="android:textColor">#7F00FF</item>
+		<item name="android:typeface">normal</item>
+	</style>
+
+ Application theme. 
+ All customizations that are NOT specific to a particular API-level 
+			can go here. 
          */
-        public static final int AppTheme=0x7f040001;
+        public static final int AppTheme=0x7f040002;
+        public static final int LrgTxtStyle=0x7f040001;
     }
 }

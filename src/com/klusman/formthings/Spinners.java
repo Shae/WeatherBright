@@ -14,6 +14,7 @@ public class Spinners {
 		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		ll.setLayoutParams(lp);
 		ll.setGravity(Gravity.CENTER_HORIZONTAL);
+		
 
 		
 		Spinner daySpin = new Spinner(context);
@@ -21,7 +22,6 @@ public class Spinners {
 		
 		ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_dropdown_item, myArray);
 		daySpin.setAdapter(spinnerArrayAdapter);
-
 		ll.addView(daySpin);
 		
 		return ll;

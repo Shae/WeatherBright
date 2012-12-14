@@ -2,7 +2,7 @@ package com.klusman.weatherbright;
 
 
 import java.io.File;
-import java.io.FileInputStream;
+//import java.io.FileInputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -22,7 +22,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
-import android.util.JsonReader;
+import android.graphics.Typeface;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -30,8 +30,10 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
@@ -43,7 +45,7 @@ public class MainActivity extends Activity {
 	ScrollView sv;
 	LinearLayout ll;
 	LinearLayout.LayoutParams lp;
-	String [] myArray = {"1-Day Forecast","2-Day forecast","3-Day forecast","4-Day forecast","5-Day forecast"};
+	String [] myArray = {"1-Day Forecast","2-Day Forecast","3-Day Forecast","4-Day Forecast","5-Day Forecast"};
 	Boolean connected = false;
 	int arrayPosition = 0;
 	String finalAreaCode = "98524";
@@ -70,10 +72,10 @@ public class MainActivity extends Activity {
 		lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
 		ll.setLayoutParams(lp);
 
-		ll.setBackgroundColor(0xFF00FF00);
+		ll.setBackgroundColor(0xFFFFFFFF);
 
 		tv = new TextView(this);
-		tv.setText("Weather Forecast");
+		tv.setText("Weather Forecast");  // Set default text 
 		tv.setTextSize(30);
 		tv.setGravity(Gravity.CENTER_HORIZONTAL);
 
@@ -98,7 +100,10 @@ public class MainActivity extends Activity {
 					// Get the item Selected and Print out in log
 					String arrayItem = myArray[arg2];
 					Log.i("ITEM SELECTED", arrayItem);
-					tv.setText((arg2 + 1) + "-Day Weather Forecast");
+					tv.setText((arg2 + 1) + "-Day Weather Forecast"); // CONCAT title
+					tv.setTextColor(0xFF222222);
+					tv.setShadowLayer(5, 3, 3, 0xaaFFFF00);
+					tv.setBackgroundColor(0xFF000000);
 					arrayPosition = arg2;
 				}
 
@@ -110,10 +115,13 @@ public class MainActivity extends Activity {
 			});
 
 			LinearLayout lineAndBtn = com.klusman.formthings.EditFieldPlusBtn.entryLinePlusButton(this, "Enter Zip Code", "Go");	
+			
 			Button btn = (Button) lineAndBtn.findViewById(2);
 			btn.setBackgroundColor(0xFFFFFFFF);
+			
 			EditText et = (EditText) lineAndBtn.findViewById(1);
-			et.setBackgroundColor(0xFFFFFF00);
+			et.setBackgroundColor(0xFFA8A8A8);
+			
 			lineAndBtn.setGravity(Gravity.CENTER_HORIZONTAL);
 
 			//  onCLICK LISTENER
@@ -133,10 +141,15 @@ public class MainActivity extends Activity {
 						//FIND A VIEW BY TAG and REMOVE IT before the next Import of DATA
 						if(ll.findViewById(40) != null){
 							ll.removeView(ll.findViewById(40));
+							ll.removeView(ll.findViewById(41));
 							ll.removeView(ll.findViewById(40));
+							ll.removeView(ll.findViewById(41));
 							ll.removeView(ll.findViewById(40));
+							ll.removeView(ll.findViewById(41));
 							ll.removeView(ll.findViewById(40));
+							ll.removeView(ll.findViewById(41));
 							ll.removeView(ll.findViewById(40));
+							ll.removeView(ll.findViewById(41));
 						}
 
 
@@ -150,6 +163,7 @@ public class MainActivity extends Activity {
 			
 			LinearLayout b1 = com.klusman.formthings.BlankLineBorder.blankLine(this);
 			LinearLayout b3 = com.klusman.formthings.BlankLineBorder.blankLine(this);
+			spinnerLayout.setBackgroundColor(0xFF000000);
 			ll.addView(spinnerLayout); // day spinner
 			ll.addView(b1); //blank line
 			ll.addView(lineAndBtn); // zip code and Btn
@@ -158,7 +172,6 @@ public class MainActivity extends Activity {
 
 			
 // If No Connection Detected			
-		//}else{ 
 		}else{
 			Log.i("CONNECTION", "NONE FOUND! Checking for Search History");
 			File file = new File("saveDataObj");
@@ -190,7 +203,16 @@ public class MainActivity extends Activity {
 
 					@Override
 					public void onClick(View v) {
-
+						
+						/*
+						if(ll.findViewById(40) != null){
+							ll.removeView(ll.findViewById(40));
+							ll.removeView(ll.findViewById(40));
+							ll.removeView(ll.findViewById(40));
+							ll.removeView(ll.findViewById(40));
+							ll.removeView(ll.findViewById(40));
+						}
+						*/
 						try{
 							
 							String st = _history.get("WeatherSave");
@@ -209,27 +231,6 @@ public class MainActivity extends Activity {
 
 				Log.i("FILE SEARCH", "DATA HAS BEEN FOUND!");
 			
-	/*			
-				
-				try{
-					//JSONObject json = new JSONObject(myStr);
-					//JSONObject results = json.getJSONObject("data");
-					resultsArrayW = myStr.getJSONArray("weather");
-					int arrayLength = resultsArrayW.length();
-					String bla = String.valueOf(arrayLength);
-					
-					Log.i("TEST", "resultsArrayLength" + bla );
-					
-					
-				}catch(JSONException e){
-					Log.e("ERROR","Failed to read saved data");
-				}
-				*/
-				//TextView tv = new TextView(this);
-				//String hashed = _history.toString();
-				//tv.setText(hashed + "\r\n" + "\r\n" + "   - I GOT IT THIS FAR.  MUST SAVE FOR GITHUB PUSH- ");
-				
-				//ll.addView(tv);
 				
 			}
 			
@@ -285,48 +286,140 @@ public class MainActivity extends Activity {
 		}
 
 	}
-
+/////////////////////////////
+/// LINE BUILD FUNCTION  ////
+/////////////////////////////
 	private void lineBuild (Context context){
 
 		for(int i=0;i < (resultsArrayW.length()) ;i++){
+			int tMaxf = 0;
+			
+			LinearLayout sideLL = new LinearLayout(_context);
+			ImageView iconLL = new ImageView(_context);
+			LayoutParams theseLP = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+			LayoutParams theseLP2 = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
+			theseLP2.gravity=Gravity.CENTER_VERTICAL;
+			theseLP2.gravity=Gravity.CENTER_HORIZONTAL;
+			iconLL.setImageResource(android.R.drawable.btn_star);  // default Icon
+			iconLL.setLayoutParams(theseLP2);
+			iconLL.setPadding(10, 10, 10, 10);
+		
+
+			sideLL.setOrientation(0);
 			
 			LinearLayout myLL = new com.klusman.formthings.WeatherDisplayLayoutLL(_context);
+			
+			myLL.setLayoutParams(theseLP);
+			myLL.setWeightSum(1);
+			
 			TextView myDate = (TextView) myLL.findViewById(2);
 			TextView myHigh = (TextView) myLL.findViewById(3);
+			
 			TextView myLow = (TextView) myLL.findViewById(4);
 			TextView myWind = (TextView) myLL.findViewById(5);
+			
 
 
 			try{
+				Log.i("TEST", "step 4.0");
 				newObj = resultsArrayW.getJSONObject(i);
 				Log.i("TEAR IT UP", newObj.getString("date"));
 				
 				String DATE = "Date: " + newObj.getString("date");
 				myDate.setText(DATE);
+				myDate.setTypeface(null, Typeface.BOLD);
+				Log.i("TEST", "Date: " + newObj.getString("date"));
 				
 				String MAX = "Temp(High): " + newObj.getString("tempMaxF");
 				myHigh.setText(MAX);
+				tMaxf = java.lang.Integer.parseInt(newObj.getString("tempMaxF"));
+
+				Log.i("TEST", "Temp(High): " + newObj.getString("tempMaxF"));
 				
 				String MIN = "Temp(Low): " + newObj.getString("tempMinF");
 				myLow.setText(MIN);
+				Log.i("TEST", "Temp(Low): " + newObj.getString("tempMinF"));
 				
 				String WIND = "Windspeed: " + newObj.getString("windspeedMiles");
 				myWind.setText(WIND);
+				Log.i("TEST", "Windspeed: " + newObj.getString("windspeedMiles"));
 				
 			}catch(JSONException e){
 				Log.e("onClick JSON", "failure");
 			}
-
-			myLL.setBackgroundColor(0xFF00FFFF);
-			myLL.setId(40);
-
-			ll.addView(myLL);
+			if ((tMaxf <= 120) && (tMaxf >= 90)){
+				myLL.setBackgroundColor(0x558C1717);
+				iconLL.setBackgroundColor(0xff8C1717);
+				iconLL.setImageResource(R.drawable.hothottherm);
+				tv.setTextColor(0x558C1717);
+				tv.setShadowLayer(5, 3, 3, 0xaaFFFF00);
+			}
+			if ((tMaxf <= 89) && (tMaxf >= 82)){
+				myLL.setBackgroundColor(0x55A62A2A);
+				iconLL.setBackgroundColor(0xffA62A2A);
+				iconLL.setImageResource(R.drawable.hottherm);
+				tv.setTextColor(0x558C1717);
+				tv.setShadowLayer(5, 3, 3, 0xffA62A2A);
+			}
+			if ((tMaxf <= 81) && (tMaxf >= 75)){
+				myLL.setBackgroundColor(0x55E47833);
+				iconLL.setBackgroundColor(0xFFE47833);
+				iconLL.setImageResource(R.drawable.medtherm);
+				tv.setTextColor(0x55E47833);
+				tv.setShadowLayer(5, 3, 3, 0xFFE47833);
+			}
+			if ((tMaxf <= 74) && (tMaxf >= 65)){
+				myLL.setBackgroundColor(0x559F9F5F);
+				iconLL.setBackgroundColor(0xff9F9F5F);
+				iconLL.setImageResource(R.drawable.grnwarm);
+				tv.setTextColor(0x559F9F5F);
+				tv.setShadowLayer(5, 3, 3, 0xff9F9F5F);
+			}
+			if ((tMaxf <= 64) && (tMaxf >= 55)){
+				myLL.setBackgroundColor(0x558FBC8F);
+				iconLL.setBackgroundColor(0xff8FBC8F);
+				iconLL.setImageResource(R.drawable.grnblutherm);
+				tv.setTextColor(0x558FBC8F);
+				tv.setShadowLayer(5, 3, 3, 0xff8FBC8F);
+			}
+			if ((tMaxf <= 54) && (tMaxf >= 40)){
+				myLL.setBackgroundColor(0x555F9F9F);
+				
+				iconLL.setBackgroundColor(0xff5F9F9F);
+				iconLL.setImageResource(R.drawable.liteblutherm);
+				tv.setTextColor(0x555F9F9F);
+				tv.setShadowLayer(5, 3, 3, 0xff5F9F9F);
+			}
+			if ((tMaxf <= 39) && (tMaxf >= 32)){
+				myLL.setBackgroundColor(0x557093DB);
+				iconLL.setBackgroundColor(0xff7093DB);
+				iconLL.setImageResource(R.drawable.coldtherm);
+				tv.setTextColor(0x557093DB);
+				tv.setShadowLayer(5, 3, 3, 0xff7093DB);
+			}
+			if ((tMaxf <= 31) && (tMaxf >= 0)){
+				myLL.setBackgroundColor(0x553232CD);
+				iconLL.setBackgroundColor(0xff3232CD);
+				iconLL.setImageResource(R.drawable.coldcold);
+				tv.setTextColor(0x553232CD);
+				tv.setShadowLayer(5, 3, 3, 0xff3232CD);
+			}
+			LinearLayout bl = com.klusman.formthings.BlankLineBorder.blankLine(_context);
+			bl.setId(41);
+			sideLL.setId(40);
+			
+			sideLL.addView(iconLL);
+			sideLL.addView(myLL);
+			ll.addView(sideLL);
+			ll.addView(bl);
 			Log.i("TEST", "loop");
 		}
 
 	}
 	
-	
+//////////////////////////////////
+/// GET STORED DATA FUNCTION  ////
+//////////////////////////////////	
 	
 	@SuppressWarnings("unchecked")
 	private HashMap<String, String> getStoredData(){
@@ -343,6 +436,9 @@ public class MainActivity extends Activity {
 	}
 	
 	
+//////////////////////////////
+/// URL REQUEST FUNCTION  ////
+//////////////////////////////
 	
 	private class QuoteRequest extends AsyncTask<URL, Void, String>{
 

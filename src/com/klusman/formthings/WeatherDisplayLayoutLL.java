@@ -15,7 +15,9 @@ public class WeatherDisplayLayoutLL extends LinearLayout implements dayInterface
 		TextView _high;
 		TextView _low;
 		TextView _windspeed;
+		
 		Context _context;
+		
 		String aDate = "xx-xx-xxxx";
 		String aHigh = "00";
 		String aLow = "00";
@@ -64,9 +66,9 @@ public class WeatherDisplayLayoutLL extends LinearLayout implements dayInterface
 			
 
 
-			LinearLayout ll = com.klusman.formthings.BlankLineBorder.blankLine(_context);
-			this.addView(ll);
-			
+			//LinearLayout ll = com.klusman.formthings.BlankLineBorder.blankLine(_context);
+			//this.addView(ll);
+			this.setPadding(20, 10, 10, 10);
 		}
 
 		@Override

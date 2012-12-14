@@ -1,5 +1,7 @@
 package com.klusman.formthings;
 
+import com.klusman.weatherbright.R;
+
 import android.content.Context;
 import android.content.res.Configuration;
 import android.text.InputFilter;
@@ -19,10 +21,10 @@ public class EditFieldPlusBtn {
 		ll.setLayoutParams(lp);
 		
 		EditText et = new EditText(context);
-		lp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		lp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT, 2f);
 		et.setHint(hint);
 		et.setLayoutParams(lp);
-		et.setTextSize(25);
+		
 
 
 		// Set EditText Keyboard Type - Number Pad
@@ -35,17 +37,25 @@ public class EditFieldPlusBtn {
 		et.setFilters(FilterArray);
 		// Set edit Text ID
 		et.setId(1);
-		et.setGravity(Gravity.CENTER_HORIZONTAL);
+		et.setShadowLayer(5, 3, 3, 0x55000000);
+		et.setTextColor(0xFF000000);
+		et.setGravity(Gravity.CENTER);
+		//et.setTextSize(40);
+		//et.setGravity(Gravity.CENTER_VERTICAL);
+		
+		et.setTextAppearance(context, R.style.LrgTxtStyle);
 		
 		Button btn = new Button(context);
+
 		btn.setText(buttonText);
 		btn.setTextSize(24);
+		btn.setShadowLayer(5, 3, 3, 0x55000000);
 		btn.setId(2);
 		btn.setTag(et);
 		
 		ll.addView(et);
 		ll.addView(btn);
-		
+		//ll.setBackgroundColor(0xFF000000);
 		return ll;
 		
 	}
