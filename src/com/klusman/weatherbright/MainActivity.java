@@ -48,7 +48,7 @@ public class MainActivity extends Activity {
 	String [] myArray = {"1-Day Forecast","2-Day Forecast","3-Day Forecast","4-Day Forecast","5-Day Forecast"};
 	Boolean connected = false;
 	int arrayPosition = 0;
-	String finalAreaCode = "98524";
+	String finalZipCode = "98524";
 	TextView tv;
 	WeatherDisplayLayoutLL _weatherLayout1;
 	LinearLayout W;
@@ -81,8 +81,11 @@ public class MainActivity extends Activity {
 
 		
 		connected = com.klusman.webStuff.WebConnections.getConnectionStatus(this);
-		// Detect network connection
-
+		
+/////////////////////////////
+//Detect network connection//
+/////////////////////////////
+		
 		if (connected  == true){
 			Log.i("NETWORK STATUS", "CONNECTED TO WEB");
 			Log.i("NETWORK STATUS", com.klusman.webStuff.WebConnections.getConnectionType(this));
@@ -116,10 +119,10 @@ public class MainActivity extends Activity {
 
 			LinearLayout lineAndBtn = com.klusman.formthings.EditFieldPlusBtn.entryLinePlusButton(this, "Enter Zip Code", "Go");	
 			
-			Button btn = (Button) lineAndBtn.findViewById(2);
+			Button btn = (Button) lineAndBtn.findViewById(2);// Find the Button
 			btn.setBackgroundColor(0xFFFFFFFF);
 			
-			EditText et = (EditText) lineAndBtn.findViewById(1);
+			EditText et = (EditText) lineAndBtn.findViewById(1);//Find the Text Field
 			et.setBackgroundColor(0xFFA8A8A8);
 			
 			lineAndBtn.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -130,18 +133,18 @@ public class MainActivity extends Activity {
 				@Override
 				public void onClick(View v) {
 
-					EditText areaCode = (EditText) v.getTag();
+					EditText zipCode = (EditText) v.getTag();
 
-					if(areaCode.getText().toString().compareTo("") == 0){   // Testing to see if "areaCode" is empty. (0 = empty, 1= not empty)
+					if(zipCode.getText().toString().compareTo("") == 0){   // Testing to see if "zipCode" is empty. (0 = empty, 1= not empty)
 						Log.i("Button Clicked :", "Add something to your text field!");  //test line if EMPTY
 					}else{
-						Log.i("Button Clicked :",areaCode.getText().toString() );  //Text field HAS data!
-						finalAreaCode = areaCode.getText().toString();
+						Log.i("Button Clicked :",zipCode.getText().toString() );  //Text field HAS data!
+						finalZipCode = zipCode.getText().toString();
 
 						//FIND A VIEW BY TAG and REMOVE IT before the next Import of DATA
 						if(ll.findViewById(40) != null){
-							ll.removeView(ll.findViewById(40));
-							ll.removeView(ll.findViewById(41));
+							ll.removeView(ll.findViewById(40)); // Search for this view to remove
+							ll.removeView(ll.findViewById(41)); // Search for this view to remove
 							ll.removeView(ll.findViewById(40));
 							ll.removeView(ll.findViewById(41));
 							ll.removeView(ll.findViewById(40));
@@ -170,8 +173,10 @@ public class MainActivity extends Activity {
 			ll.addView(b3);//blank line
 			ll.addView(tv); // forecast day title
 
+//////////////////////////////			
+// If NO Connection Detected//
+//////////////////////////////
 			
-// If No Connection Detected			
 		}else{
 			Log.i("CONNECTION", "NONE FOUND! Checking for Search History");
 			File file = new File("saveDataObj");
@@ -187,11 +192,11 @@ public class MainActivity extends Activity {
 				
 			}else{
 				TextView tv = new TextView(this);
-				tv.setText("No Network Connection." + "\r\n" + "\r\n" + "\r\n");
+				tv.setText("No Network Connection." + "\r\n" + "\r\n" + "\r\n"); // Set warning
 				tv.setTextSize(30);
 				tv.setGravity(Gravity.CENTER_HORIZONTAL);
 				ll.addView(tv);
-				Button btn = new Button(this);
+				Button btn = new Button(this); // Make Button for user choice
 				btn.setText("Use Last Pull");
 				btn.setTextSize(24);
 
@@ -199,29 +204,21 @@ public class MainActivity extends Activity {
 				btn.setGravity(Gravity.CENTER_HORIZONTAL);
 				ll.addView(btn);
 				
+				// On Click
 				btn.setOnClickListener(new View.OnClickListener() {
 
 					@Override
 					public void onClick(View v) {
 						
-						/*
-						if(ll.findViewById(40) != null){
-							ll.removeView(ll.findViewById(40));
-							ll.removeView(ll.findViewById(40));
-							ll.removeView(ll.findViewById(40));
-							ll.removeView(ll.findViewById(40));
-							ll.removeView(ll.findViewById(40));
-						}
-						*/
 						try{
 							
-							String st = _history.get("WeatherSave");
-							JSONObject js = new JSONObject(st);
+							String st = _history.get("WeatherSave");  // Pull Saved data
+							JSONObject js = new JSONObject(st);  //  Build as JSON OBJ
 							Log.i("JSON OBJECT", "WORKED!");
-							resultsArrayW = js.getJSONArray("weather");
-							lineBuild(_context);
+							resultsArrayW = js.getJSONArray("weather");  // Pull an Array from JSON
+							lineBuild(_context); // Blank Line
 						}catch(JSONException e){
-							e.printStackTrace();
+							e.printStackTrace();  // follow error
 						}
 						
 						
@@ -240,7 +237,7 @@ public class MainActivity extends Activity {
 			
 		
 
-		LinearLayout b2 = com.klusman.formthings.BlankLineBorder.blankLine(this);
+		LinearLayout b2 = com.klusman.formthings.BlankLineBorder.blankLine(this);  // Build Black Line
 
 		ll.addView(b2);//blank line
 
@@ -253,31 +250,31 @@ public class MainActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.activity_main, menu);
+		getMenuInflater().inflate(R.menu.activity_main, menu);  //  INFLATER //
 		return true;
 	}
 
 	private void getDays(int daySpan){
-		String dayString = String.valueOf(daySpan);
-		String areaCode = finalAreaCode;
+		String dayString = String.valueOf(daySpan);  // int to string
+		String zipCode = finalZipCode;  //Pull ZipCode from global values
 
 		Log.i("DAYS TO GET", "Pull this many days: " + dayString );
-
-		String messURL = "http://free.worldweatheronline.com/feed/weather.ashx?q=" + areaCode + "&format=json&num_of_days=" + daySpan + "&key=2a0cc91795015022122811";
+		// Concat http address
+		String messURL = "http://free.worldweatheronline.com/feed/weather.ashx?q=" + zipCode + "&format=json&num_of_days=" + daySpan + "&key=2a0cc91795015022122811";
 		String qs;
 
 		try{
-			qs = URLEncoder.encode(messURL, "UTF-8");
-			Log.i("URL to CALL", qs);  // WORKS!!!!!!
+			qs = URLEncoder.encode(messURL, "UTF-8");  //encode URL
+			Log.i("URL to CALL", qs);  // URL test LOG
 		} catch(Exception e){
 			Log.e("BAD URL", "Encoding Problem");
 			qs = "";
 		}
-
+		
 		URL finalURL;
 
 		try{
-			finalURL = new URL(messURL);
+			finalURL = new URL(messURL);  
 			QuoteRequest qr = new QuoteRequest();
 			qr.execute(finalURL);
 
@@ -319,7 +316,7 @@ public class MainActivity extends Activity {
 			TextView myWind = (TextView) myLL.findViewById(5);
 			
 
-
+			// Set Values
 			try{
 				Log.i("TEST", "step 4.0");
 				newObj = resultsArrayW.getJSONObject(i);
@@ -347,6 +344,8 @@ public class MainActivity extends Activity {
 			}catch(JSONException e){
 				Log.e("onClick JSON", "failure");
 			}
+			
+			// View  Settings //
 			if ((tMaxf <= 120) && (tMaxf >= 90)){
 				myLL.setBackgroundColor(0x558C1717);
 				iconLL.setBackgroundColor(0xff8C1717);
